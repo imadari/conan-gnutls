@@ -1,4 +1,4 @@
-from conans import ConanFile, AutoToolsBuildEnvironment, tools
+from conans import AutoToolsBuildEnvironment, tools, ConanFile
 
 
 class GnutlsConan(ConanFile):
@@ -11,14 +11,28 @@ class GnutlsConan(ConanFile):
     default_options = "shared=True"
     generators = "cmake"
 
+    # def system_requirements(self):
+    #     try:
+    #         installer = conans.tools.SystemPackageTool()
+    #         installer.update()
+    #         installer.install('autoconf')
+    #         installer.install('automake')
+    #         installer.install('libtool')
+    #         installer.install('make')
+    #         installer.install('pkg-config')
+    #     except:
+    #         self.output.warn('Unable to bootstrap required build tools.  If they are already installed, you can ignore this warning.')
+
     def source(self):
         self.run("wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.5/gnutls-3.5.0.tar.xz")
         self.run("tar xf ./gnutls-3.5.0.tar.xz")
 
     def build(self):
-        env_build = AutoToolsBuildEnvironment(self)
-        env_build.configure(configure_dir='gnutls-3.5.0', args=['--without-p11-kit'])
-        env_build.make()
+        with tools.chdir("gnutls-3.5.0"):
+            self.run('autoreconf')
+            env_build = AutoToolsBuildEnvironment(self)
+            env_build.configure(args=['--without-p11-kit', "--without-p11-kit", "--enable-shared", "--enable-static", "--with-included-libtasn1", "--disable-tools", "--without-idn" "--with-included-unistring"])
+            env_build.make()
 
     def package(self):
         self.copy("*.so", dst="lib", src="./lib/.libs/", keep_path=False)
