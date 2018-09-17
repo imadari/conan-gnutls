@@ -9,7 +9,7 @@ class GnutlsConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=True"
-    generators = "cmake"
+    generators = "pkg_config"
 
     # def system_requirements(self):
     #     try:
@@ -35,10 +35,12 @@ class GnutlsConan(ConanFile):
             env_build.make()
 
     def package(self):
-        self.copy("*.so", dst="lib", src="./lib/.libs/", keep_path=False)
+        self.copy("*.so", dst="lib", src="gnutls-3.5.0/lib/.libs/", keep_path=False)
         self.copy("*.h", dst="include/gnutls", keep_path=False, src="./lib/includes/gnutls/")
         self.copy("*.h", dst="include/gnutls", keep_path=False, src="gnutls-3.5.0/lib/includes/gnutls/")
+        self.copy("*.pc", keep_path=False, src="gnutls-3.5.0/lib/")
 
     def package_info(self):
         self.cpp_info.libs = ["gnutls"]
+
 
