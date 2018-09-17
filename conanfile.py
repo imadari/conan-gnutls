@@ -5,7 +5,8 @@ class GnutlsConan(ConanFile):
     name = "GnuTLS"
     version = "3.5.0"
     license = "LGPLv2.1+"
-    url = "https://www.gnutls.org/"
+    url = "url = "https://github.com/imadari/conan-gnutls"
+    description = "Secure communications library implementing the SSL, TLS and DTLS protocols and technologies around them"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=True"
